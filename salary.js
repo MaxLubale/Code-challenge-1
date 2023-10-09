@@ -1,4 +1,7 @@
 let prompt = require('prompt-sync')();
+// Get the inputs from the user
+const basicSalary = parseInt(prompt("Enter your basic salary:"));
+const benefits = parseInt(prompt("Enter your benefits:"));
 
 
 
@@ -13,6 +16,8 @@ const NHIF_RATE = 6;
 const NSSF_RATE = 6;
 
 // Calculate the tax payee 
+const payee = calculatePayee(grossSalary);
+
 function calculatePayee(taxableIncome) {
  for (const KRA_VALUE of KRA_VALUES) {
     if (taxableIncome <= KRA_VALUE.taxableIncomeRange) {
@@ -25,38 +30,30 @@ function calculatePayee(taxableIncome) {
 }
 
 // Calculate the NHIF deductions
+const NHIFDeductions = calculateNHIFDeductions(grossSalary);
 function calculateNHIFDeductions(salary) {
  return (salary * NHIF_RATE) / 100;
 }
 
 // Calculate the NSSF deductions
+const NSSFDeductions = calculateNSSFDeductions(grossSalary);
 function calculateNSSFDeductions(salary) {
  return (salary * NSSF_RATE) / 100;
 }
 
 // Calculate the gross salary
+const grossSalary = calculateGrossSalary(basicSalary, benefits);
 function calculateGrossSalary(basicSalary, benefits) {
  return basicSalary + benefits;
 }
 
 // Calculate the net salary
+const netSalary = calculateNetSalary(grossSalary, payee, NHIFDeductions, NSSFDeductions);
 function calculateNetSalary(grossSalary, payee, NHIFDeductions, NSSFDeductions) {
  return grossSalary - payee - NHIFDeductions - NSSFDeductions;
-}
-
-// Get the inputs from the user
-const basicSalary = parseInt(prompt("Enter your basic salary:"));
-const benefits = parseInt(prompt("Enter your benefits:"));
-
-const grossSalary = calculateGrossSalary(basicSalary, benefits);
-    const payee = calculatePayee(grossSalary);
-    const NHIFDeductions = calculateNHIFDeductions(grossSalary);
-    const NSSFDeductions = calculateNSSFDeductions(grossSalary);
-    const netSalary = calculateNetSalary(grossSalary, payee, NHIFDeductions, NSSFDeductions);
-
-
-
-console.log(`Gross Salary: ${grossSalary}`);
+}  
+   //call out functions
+    console.log(`Gross Salary: ${grossSalary}`);
     console.log(`Payee: ${payee}`);
     console.log(`NHIF Deductions: ${NHIFDeductions}`);
     console.log(`NSSF Deductions: ${NSSFDeductions}`);
